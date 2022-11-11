@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph.xml"
+    app:startDestination="@id/allCitiesFragment">
+
+    <fragment
+        android:id="@+id/allCitiesFragment"
+        android:name="com.planradar.weather.presentation.fragments.AllCitiesFragment"
+        android:label="fragment_all_cities"
+        tools:layout="@layout/fragment_all_cities" >
+        <action
+            android:id="@+id/action_allCitiesFragment_to_cityDetailsFragment"
+            app:destination="@id/cityDetailsFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="city_name"
+                app:argType="string"
+                app:nullable="false"
+                android:defaultValue="0" />
+        </action>
+        <action
+            android:id="@+id/action_allCitiesFragment_to_historicalCityFragment"
+            app:destination="@id/historicalCityFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            <argument
+                android:name="city_name"
+                app:argType="string"
+                app:nullable="false"
+                android:defaultValue="0" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/cityDetailsFragment"
+        android:name="com.planradar.weather.presentation.fragments.CityDetailsFragment"
+        android:label="fragment_city_details"
+        tools:layout="@layout/fragment_city_details" >
+        <action
+            android:id="@+id/action_cityDetailsFragment_to_historicalCityFragment"
+            app:destination="@id/historicalCityFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/historicalCityFragment"
+        android:name="com.planradar.weather.presentation.fragments.HistoricalCityFragment"
+        android:label="fragment_historical_city"
+        tools:layout="@layout/fragment_historical_city"
+        >
+        <action
+            android:id="@+id/action_historicalCityFragment_to_cityDetailsFragment"
+            app:destination="@id/cityDetailsFragment"
+            app:popUpTo="@id/cityDetailsFragment"
+            app:popUpToInclusive="true"
+            app:popUpToSaveState="true"
+            app:restoreState="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+</navigation>

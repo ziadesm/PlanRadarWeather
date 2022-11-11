@@ -7,7 +7,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
-//    id 'androidx.navigation.safeargs.kotlin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
@@ -32,6 +32,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            minifyEnabled false
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -113,6 +118,10 @@ dependencies {
 
     // Lifecycle
     implementation Libs.Lifecycle.fragment
+
+    // Navigation
+    implementation Libs.Navigation.fragment
+    implementation Libs.Navigation.ui
 
     // Cache (Room)
     implementation Libs.Cache.runtime
