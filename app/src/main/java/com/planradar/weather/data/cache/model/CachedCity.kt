@@ -7,29 +7,40 @@ import com.planradar.weather.domain.model.City
 
 @Entity(tableName = "city")
 data class CachedCity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     var cityId: Long = 0L,
     @ColumnInfo(collate = NOCASE) var name: String,
-    var country: String,
-    var population: Long ,
-    var lat: Double,
-    var lng: Double,
-    var sunrise: Long,
-    var sunset: Long
+    val main_humidity: Int? = null,
+    val main_temp: Double? = null,
+    val wind_speed: Double? = null,
+    val weather_icon: String? = null,
+    val weather_main: String? = null,
+    val date: Long? = null,
 ) {
     companion object {
         fun fromDomain(city: City): CachedCity {
             return CachedCity(
-                city.id,
-                city.name,
-                city.country ?: "",
-                city.population ?: 0L,
-                city.lat ?: 0.0,
-                city.lng ?: 0.0,
-                city.sunrise ?: 0L,
-                city.sunset ?: 0L,
+                cityId = city.id,
+                name = city.name,
+                main_humidity = city.main_humidity,
+                main_temp = city.main_temp,
+                wind_speed = city.wind_speed,
+                weather_icon = city.weather_icon,
+                weather_main = city.weather_main,
+                date = city.date
             )
         }
-
+        fun toDomain(city: CachedCity): City {
+            return City(
+                id = city.cityId,
+                name = city.name,
+                main_humidity = city.main_humidity,
+                main_temp = city.main_temp,
+                wind_speed = city.wind_speed,
+                weather_icon = city.weather_icon,
+                weather_main = city.weather_main,
+                date = city.date
+            )
+        }
     }
 }

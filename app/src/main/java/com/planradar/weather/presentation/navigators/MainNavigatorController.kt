@@ -1,6 +1,7 @@
 package com.planradar.weather.presentation.navigators
 import androidx.navigation.NavController
 import com.planradar.weather.presentation.fragments.AllCitiesFragmentDirections
+import com.planradar.weather.presentation.fragments.HistoricalCityFragmentDirections
 
 /**
  * @param navController
@@ -29,6 +30,13 @@ constructor(
                         )
                     )
                 }
+                is AuthNavigatorIntent.AllHistoryToCityDetails -> {
+                    navController.navigate(
+                        HistoricalCityFragmentDirections.actionHistoricalCityFragmentToCityDetailsFragment(
+                            state.cityId, state.date
+                        )
+                    )
+                }
             }
         } catch (e: Exception) { e.printStackTrace() }
     }
@@ -41,6 +49,11 @@ sealed class AuthNavigatorIntent {
         val removeFromBackStack: Boolean = false
     ): AuthNavigatorIntent()
     data class AllCitiesToCityInfo(
+        val cityId: String,
+        val removeFromBackStack: Boolean = false
+    ): AuthNavigatorIntent()
+    data class AllHistoryToCityDetails(
+        val date: Long,
         val cityId: String,
         val removeFromBackStack: Boolean = false
     ): AuthNavigatorIntent()

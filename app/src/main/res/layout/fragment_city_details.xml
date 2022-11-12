@@ -1,14 +1,285 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.fragments.CityDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+<!--android:background="@drawable/bg_white_color"-->
 
-</FrameLayout>
+    <include
+        android:id="@+id/appToolbarBack"
+        layout="@layout/app_bar_white_with_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvWeatherParent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="4dp"
+        android:shadowColor="#000"
+        android:shadowDx="30"
+        android:shadowDy="30"
+        android:shadowRadius="30"
+        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintWidth_percent="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_white_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintWidth_percent="0.8">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvWeatherStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="12dp"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center"
+                android:minLines="1"
+                android:textAlignment="gravity"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/app_name" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivCityWeatherIcon"
+                android:layout_width="94dp"
+                android:layout_height="77dp"
+                app:layout_constraintBottom_toTopOf="@+id/llDescParent"
+                app:layout_constraintEnd_toEndOf="@+id/tvWeatherStatus"
+                app:layout_constraintStart_toStartOf="@id/tvWeatherStatus"
+                app:layout_constraintTop_toBottomOf="@+id/tvWeatherStatus"
+                app:layout_constraintVertical_bias="0.4" />
+
+            <LinearLayout
+                android:id="@+id/llDescParent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:paddingHorizontal="24dp"
+                app:layout_constraintBottom_toTopOf="@+id/llTempParent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="0.02">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherDescriptionHolder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:text="@string/description"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="14sp"
+                    android:autoSizePresetSizes="2sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/roboto_regular"
+                    tools:text="@string/app_name"
+                    android:textColor="@color/colorPrimary"
+                    tools:targetApi="o" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llTempParent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:paddingHorizontal="24dp"
+                app:layout_constraintBottom_toTopOf="@+id/llHumidityParent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="0.02">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherTempHolder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="@string/temperature"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherTemp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="14sp"
+                    android:autoSizePresetSizes="2sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/roboto_regular"
+                    tools:text="@string/app_name"
+                    android:textColor="@color/colorPrimary"
+                    tools:targetApi="o" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llHumidityParent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:paddingHorizontal="24dp"
+                app:layout_constraintBottom_toTopOf="@+id/llWindSpeedParent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="0.02">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherHumidityHolder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="@string/humidity" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherHumidity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="14sp"
+                    android:autoSizePresetSizes="2sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/roboto_regular"
+                    tools:text="@string/app_name"
+                    android:textColor="@color/colorPrimary"
+                    tools:targetApi="o" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llWindSpeedParent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:paddingHorizontal="24dp"
+                app:layout_constraintVertical_bias="0.85"
+                app:layout_constraintTop_toBottomOf="@+id/ivCityWeatherIcon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherWindSpeedHolder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="@string/windspeed"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWeatherWindSpeed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="8dp"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="14sp"
+                    android:autoSizePresetSizes="2sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/roboto_regular"
+                    tools:text="@string/app_name"
+                    android:textColor="@color/colorPrimary"
+                    tools:targetApi="o" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvWeatherInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:minLines="1"
+        android:fontFamily="@font/roboto_regular"
+        tools:text="@string/app_name"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cvWeatherParent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/pbCityDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/appToolbarBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

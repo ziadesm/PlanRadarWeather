@@ -1,14 +1,16 @@
 package com.planradar.weather.domain.usecases
+
+import com.planradar.weather.domain.model.City
 import com.planradar.weather.domain.repository.WeatherRepository
 import javax.inject.Inject
 
-class GetWeather
+class InsertCity
 @Inject
 constructor(
     private val weatherRepository: WeatherRepository
 ) {
-    operator fun invoke(name: String) = try {
-        weatherRepository.getWeather(name)
+    suspend operator fun invoke(city: City, date: Long) = try {
+        weatherRepository.storeWeather(city, date)
     } catch (e: Exception) {
         throw e
     }

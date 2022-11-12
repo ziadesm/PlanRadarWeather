@@ -1,22 +1,32 @@
 package com.planradar.weather.data.cache.daos
 import androidx.room.*
-import com.planradar.weather.data.cache.model.CachedCity
-import com.planradar.weather.data.cache.model.CachedCityWithForecast
-import com.planradar.weather.data.cache.model.CachedForecast
+import com.planradar.weather.data.cache.model.*
+import com.planradar.weather.data.cache.model.relations.CachedCityWithForecast
+import com.planradar.weather.data.cache.model.relations.CachedCityWithHistory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class WeatherDao {
+interface WeatherDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCityHistory(history: CachedHistoryCity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCity(city: CachedCity)
+
+
     @Transaction
-    @Query("SELECT * FROM city where name = :name")
-    abstract fun getForecast(name: String): Flow<CachedCityWithForecast>
+    @Query("SELECT * FROM city")
+    fun getAllCities(): Flow<List<CachedCity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertCity(city: CachedCity)
+    @Transaction
+    @Query("SELECT * FROM city WHERE name = :name")
+    fun getSingleCity(name: String): Flow<CachedCity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertForecast(vararg cachedForecast: CachedForecast)
+    @Transaction
+    @Query("SELECT * FROM city_history WHERE name = :name")
+    fun getAllCityHistory(name: String): Flow<List<CachedHistoryCity>>
 
-    @Query("DELETE FROM forecast WHERE cityId = :cityId")
-    abstract suspend fun deleteByCity(cityId: Long?)
+    @Transaction
+    @Query("SELECT * FROM city_history WHERE name = :name AND date = :date")
+    fun getCityHistory(name: String, date: Long): Flow<CachedCityWithHistory>
 }

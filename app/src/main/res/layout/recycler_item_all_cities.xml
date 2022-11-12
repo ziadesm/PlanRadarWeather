@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCityName"
         android:layout_width="0dp"
@@ -14,6 +15,13 @@
         android:minLines="1"
         android:maxLines="1"
         android:ellipsize="end"
+        android:drawableStart="@mipmap/ic_location_city"
+        android:drawablePadding="12dp"
+        android:gravity="center|start"
+        android:textAlignment="gravity"
+        tools:text="City Name"
+        android:textStyle="bold"
+        android:fontFamily="@font/roboto_bold"
         app:layout_constraintWidth_percent="0.9"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +32,7 @@
         android:id="@+id/ivCityInfo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ic_info_black"
+        android:src="@mipmap/ic_info"
         android:layout_margin="4dp"
         android:padding="2dp"
         app:layout_constraintEnd_toEndOf="parent"

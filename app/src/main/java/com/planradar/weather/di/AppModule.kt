@@ -4,11 +4,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.planradar.weather.data.api.ApiConstants
 import com.planradar.weather.data.api.WeatherApi
-import com.planradar.weather.data.cache.Cache
 import com.planradar.weather.data.cache.WeatherDatabase
 import com.planradar.weather.data.cache.daos.WeatherDao
-import com.planradar.weather.domain.repository.WeatherRepository
-import com.planradar.weather.domain.repository.WeatherRepositoryImpl
 import com.planradar.weather.utils.GeneralConstants
 import dagger.Module
 import dagger.Provides
@@ -16,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -39,11 +37,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRetrofitClient(): WeatherApi {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
         val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .connectTimeout(20, TimeUnit.SECONDS)
-//            .addInterceptor(OkHttpProfilerInterceptor())
             .addInterceptor { chain ->
                 val newRequest = chain.request().newBuilder()
                     .addHeader("Accept", "application/json")
@@ -51,8 +52,6 @@ object AppModule {
                     .build()
                 chain.proceed(newRequest)
             }
-            /*.addNetworkInterceptor(CacheInterceptor())
-            .addInterceptor(ForceCacheInterceptor(context))*/
             .build()
         return Retrofit.Builder()
             .client(okHttpClient)

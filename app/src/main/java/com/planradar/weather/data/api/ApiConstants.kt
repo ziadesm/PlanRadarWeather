@@ -1,7 +1,7 @@
 package com.planradar.weather.data.api
 
 object ApiConstants {
-    const val BASE_ENDPOINT = "https://openweathermap.org"
+    const val BASE_ENDPOINT = "https://api.openweathermap.org/"
     const val CITY_CAST = "data/2.5/weather"
     const val FORECAST_ENDPOINT = "forecast"
 }

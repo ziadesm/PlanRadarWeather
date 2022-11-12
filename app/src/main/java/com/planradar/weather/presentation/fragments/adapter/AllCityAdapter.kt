@@ -2,6 +2,7 @@ package com.planradar.weather.presentation.fragments.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.planradar.weather.data.cache.model.CachedCity
 import com.planradar.weather.databinding.RecyclerItemAllCitiesBinding
 import com.planradar.weather.domain.model.City
 import com.planradar.weather.listeners.OnItemClickedGeneric
@@ -13,19 +14,19 @@ class AllCityAdapter: RecyclerView.Adapter<ViewBindingVH<RecyclerItemAllCitiesBi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewBindingVH<RecyclerItemAllCitiesBinding> =
         ViewBindingVH.create(parent, RecyclerItemAllCitiesBinding::inflate)
 
-    private lateinit var mListener: OnItemClickedGeneric<City>
+    private lateinit var mListener: OnItemClickedGeneric<CachedCity>
     private val callback by lazy { DiffUtilCallBack(this) }
-    private val mNewList by lazy { arrayListOf<City>() }
+    private val mNewList by lazy { arrayListOf<CachedCity>() }
 
     companion object {
         const val CITY_MODEL = "city_model"
         const val CITY_INFO = "city_info"
     }
-    fun setOnItemClickListener(listener: OnItemClickedGeneric<City>) { mListener = listener }
+    fun setOnItemClickListener(listener: OnItemClickedGeneric<CachedCity>) { mListener = listener }
 
-    fun submitList(list: List<City>) { updateListItems(list) }
+    fun submitList(list: List<CachedCity>) { updateListItems(list) }
 
-    private fun updateListItems(list: List<City>) {
+    private fun updateListItems(list: List<CachedCity>) {
         val diffCallback = ItemsDiffCallback(mNewList, list)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         mNewList.clear()

@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">PlanRadarWeather</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cities">Cities</string>
+    <string name="weather_info_details">Weather information for %1$s received on\n%2$s</string>
+    <string name="weather_desc">Description: %1$s</string>
+    <string name="weather_temp">%1$sC</string>
+    <string name="weather_humidity">%1$s\%%</string>
+    <string name="weather_wind_speed">%1$skmh</string>
+    <string name="search_city">Search city</string>
+    <string name="add_city">Add City</string>
+    <string name="search_for_cities">Search for cities</string>
+    <string name="weather_history_adapter">%1$s, %2$s°C</string>
+    <string name="description">Description</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="windspeed">Windspeed</string>
+    <string name="city_historical">%1$s Historical</string>
 </resources>

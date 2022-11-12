@@ -45,6 +45,16 @@
         android:name="com.planradar.weather.presentation.fragments.CityDetailsFragment"
         android:label="fragment_city_details"
         tools:layout="@layout/fragment_city_details" >
+        <argument
+            android:name="city_name"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="0L" />
+        <argument
+            android:name="city_date"
+            app:argType="long"
+            app:nullable="false"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_cityDetailsFragment_to_historicalCityFragment"
             app:destination="@id/historicalCityFragment"
@@ -57,8 +67,17 @@
         android:id="@+id/historicalCityFragment"
         android:name="com.planradar.weather.presentation.fragments.HistoricalCityFragment"
         android:label="fragment_historical_city"
-        tools:layout="@layout/fragment_historical_city"
-        >
+        tools:layout="@layout/fragment_historical_city">
+        <argument
+            android:name="city_name"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="0" />
+        <argument
+            android:name="city_date"
+            app:argType="long"
+            app:nullable="false"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_historicalCityFragment_to_cityDetailsFragment"
             app:destination="@id/cityDetailsFragment"
