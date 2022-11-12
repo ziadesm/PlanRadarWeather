@@ -1,7 +1,11 @@
 package com.planradar.weather.data
 
+import android.content.Context
+import android.util.Log
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.test.platform.app.InstrumentationRegistry
+import com.planradar.weather.data.api.ApiConstants
 import com.planradar.weather.data.api.WeatherApi
 import com.planradar.weather.data.api.utils.FakeServer
 import com.planradar.weather.data.cache.WeatherDatabase
@@ -9,22 +13,31 @@ import com.planradar.weather.data.cache.daos.WeatherDao
 import com.planradar.weather.domain.repository.WeatherRepository
 import com.planradar.weather.domain.repository.WeatherRepositoryImpl
 import com.planradar.weather.network.NetworkResponse
+import com.planradar.weather.utils.GeneralConstants
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 
 import org.junit.Test
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +47,6 @@ class WeatherRepositoryImpTest {
 
     private val fakeServer = FakeServer()
     private lateinit var repository: WeatherRepository
-    private lateinit var api: WeatherApi
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -45,31 +57,57 @@ class WeatherRepositoryImpTest {
     lateinit var database: WeatherDatabase
 
     @Inject
-    lateinit var retrofitBuilder: Retrofit.Builder
+    lateinit var api: WeatherApi
+
+    @Module
+    @InstallIn(ViewModelComponent::class)
+    object ViewModelModule {
+        @Provides
+        fun provideWeather(cache: WeatherDao, api: WeatherApi): WeatherRepository {
+            return FakeRepository()
+        }
+    }
 
     @Module
     @InstallIn(SingletonComponent::class)
-    abstract class TestCacheModule {
-        @Binds
-        abstract fun bindCache(cache: WeatherDatabase): WeatherDao
+    object TestCacheModule {
+        @Singleton
+        @Provides
+        fun provideWeatherDatabase(@ApplicationContext context: Context) =
+            Room.databaseBuilder(context, WeatherDatabase::class.java, GeneralConstants.DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .setJournalMode(RoomDatabase.JournalMode.AUTOMATIC)
+                .build()
 
-        companion object {
+        @Singleton
+        @Provides
+        fun provideWeatherDao(db: WeatherDatabase): WeatherDao = db.weatherDao()
 
-            @Provides
-            @Singleton
-            fun provideRoomDatabase(): WeatherDatabase {
-                return Room.inMemoryDatabaseBuilder(
-                    InstrumentationRegistry.getInstrumentation().context,
-                    WeatherDatabase::class.java
-                )
-                    .allowMainThreadQueries()
-                    .build()
-            }
+        @Provides
+        @Singleton
+        fun provideWeatherApi(): WeatherApi {
+            val interceptor = HttpLoggingInterceptor()
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-            @Provides
-            fun weatherDao(
-                weatherDatabase: WeatherDatabase
-            ): WeatherDao = weatherDatabase.weatherDao()
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor { chain ->
+                    val newRequest = chain.request().newBuilder()
+                        .addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json")
+                        .build()
+                    chain.proceed(newRequest)
+                }
+                .build()
+            return Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(ApiConstants.BASE_ENDPOINT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(WeatherApi::class.java)
         }
 
     }
@@ -79,11 +117,6 @@ class WeatherRepositoryImpTest {
         fakeServer.start()
 
         hiltRule.inject()
-
-        api = retrofitBuilder
-            .baseUrl(fakeServer.baseEndpoint)
-            .build()
-            .create(WeatherApi::class.java)
 
         cache = database.weatherDao()
 
@@ -101,18 +134,28 @@ class WeatherRepositoryImpTest {
         // When
         val resultCity = repository.requestWeather("Cairo")
         // Then
-//        assert(expectedCityId == resultCity.first())
+        resultCity.collect{
+            when(it) {
+                is NetworkResponse.Success -> assert(expectedCityId == it.body.id)
+                else -> Log.e("TestingFail", "Test requestForecast_returnsCorrectCity fail")
+            }
+        }
     }
 
     @Test
     fun requestForecast_returnsCorrectWeather() = runBlocking {
         // Given
-        val expectedTemp = "301"
+        val expectedTemp = 301.0
         fakeServer.setHappyPathDispatcher()
         // When
         val resultCity = repository.requestWeather("Cairo")
         // Then
-//        assert(expectedTemp == resultCity.weather.first().temp)
+        resultCity.collect{
+            when(it) {
+                is NetworkResponse.Success -> assert(expectedTemp == it.body.main_temp)
+                else -> Log.e("TestingFail", "Test requestForecast_returnsCorrectWeather fail")
+            }
+        }
     }
 
     @Test
@@ -121,14 +164,20 @@ class WeatherRepositoryImpTest {
         val expectedCityId = 360630L
         runBlocking {
             fakeServer.setHappyPathDispatcher()
+            val resultCity = repository.requestWeather("Cairo")
             // When
-            /*when(val resultCity = repository.requestWeather("Cairo")) {
-                is NetworkResponse.Success -> repository.storeWeather(resultCity.body)
-            }*/
+            resultCity.collect {
+                when(it) {
+                    is NetworkResponse.Success -> {
+                        repository.storeWeather(it.body, Calendar.getInstance().timeInMillis)
+                        // Then
+                        val insertedValue = repository.getLastWeather("Cairo").first()
+                        assert(insertedValue.cityId == expectedCityId)
+                    }
+                    else -> Log.e("TestingFail", "Test storeWeather fail")
+                }
+            }
 
-            // Then
-            val insertedValue = repository.getWeather("Cairo").first()
-            assert(insertedValue.id == expectedCityId)
         }
     }
 

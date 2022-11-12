@@ -9,10 +9,10 @@ import com.planradar.weather.data.cache.model.relations.CachedCityWithForecast
 import com.planradar.weather.data.cache.model.relations.CachedCityWithHistory
 import com.planradar.weather.data.cache.model.relations.toDomain
 import com.planradar.weather.data.mapper.NetworkMapper
+import com.planradar.weather.data.utils.JsonReader
 import com.planradar.weather.domain.model.City
 import com.planradar.weather.domain.repository.WeatherRepository
 import com.planradar.weather.network.NetworkResponse
-import com.planradar.weather.utils.JsonReader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

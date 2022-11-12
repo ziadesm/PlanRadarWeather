@@ -1,0 +1,20 @@
+{
+  "weather": [
+    {
+      "id": 802,
+      "main": "Clouds",
+      "description": "scattered clouds",
+      "icon": "03n"
+    }
+  ],
+  "main": {
+    "temp": 296.16,
+    "humidity": 56
+  },
+  "wind": {
+    "speed": 6.1
+  },
+  "id": 360630,
+  "name": "Cairo",
+  "cod": 200
+}
